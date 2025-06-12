@@ -21,5 +21,8 @@ public class Todo {
     @Column(unique = true)
     private String name;
     private Boolean isChecked;
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 
 }

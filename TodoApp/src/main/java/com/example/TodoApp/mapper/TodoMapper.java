@@ -32,8 +32,6 @@ public class TodoMapper {
     public List<TodoDto> toDtoList(List<Todo> todos){
         return todos.stream().map
                 (todo ->modelMapper.map(todo,TodoDto.class)).collect(Collectors.toList());
-
-
     }
 
 
