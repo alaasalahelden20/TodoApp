@@ -24,9 +24,10 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
     // Generate JWT token
-    public String generateToken(String username) {
+    public String generateToken(String username,Long Id) {
         return Jwts.builder()
                 .setSubject(username)
+                .claim("userId",Id)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + lifespan))
                 .signWith(key, SignatureAlgorithm.HS256)

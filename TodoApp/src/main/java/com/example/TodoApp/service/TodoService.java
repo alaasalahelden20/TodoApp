@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface TodoService {
 //add_todo
-    TodoDto createDto (TodoDto todoDto);
+    TodoDto createDto (TodoDto todoDto,String username);
 // get-todo_by-id
-    TodoDto getTodoById(long Id);
+    TodoDto getTodoById(long Id,String username);
 
     List<TodoDto> getTodos();
 

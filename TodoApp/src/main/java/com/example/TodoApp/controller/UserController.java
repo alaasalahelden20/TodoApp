@@ -57,7 +57,7 @@ public class UserController {
                 UserDetails userDetails = (UserDetails) auth.getPrincipal();
 
                 // If successful, you can generate JWT token here or return success
-                return ResponseEntity.ok().body(jwtUtil.generateToken(userDetails.getUsername()));
+                return ResponseEntity.ok().body(jwtUtil.generateToken(userDetails.getUsername(),request.getId()));
             } catch (AuthenticationException ex) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
             }
