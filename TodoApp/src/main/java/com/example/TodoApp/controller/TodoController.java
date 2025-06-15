@@ -2,6 +2,7 @@ package com.example.TodoApp.controller;
 
 
 import com.example.TodoApp.dto.TodoDto;
+import com.example.TodoApp.security.jwt.JwtUtil;
 import com.example.TodoApp.service.TodoService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,15 @@ import static org.springframework.web.reactive.function.server.ServerResponse.st
 public class TodoController {
     @Autowired
     TodoService todoService;
+    @Autowired
+    JwtUtil jwtUtil;
 
     @PostMapping()
-    public ResponseEntity<TodoDto> AddTodo(@RequestBody @Valid TodoDto todoDto){
+    public ResponseEntity<TodoDto> AddTodo(
+            @RequestBody @Valid TodoDto todoDto,
+            @RequestHeader("Authorization") String token){
+        String jwt = token.substring(7); // remove "Bearer "
+        String username = jwtUtil.getUsernameFromToken(jwt);
         TodoDto savedTodo=todoService.createDto(todoDto);
         return new ResponseEntity<>(savedTodo,HttpStatus.CREATED);
     }
@@ -36,8 +43,6 @@ public class TodoController {
     public ResponseEntity< List<TodoDto>> getTodos(){
         List<TodoDto> todos=todoService.getTodos();
         return new ResponseEntity<>(todos,HttpStatus.ACCEPTED);
-
-
 
     }
     @PutMapping("/{Id}")

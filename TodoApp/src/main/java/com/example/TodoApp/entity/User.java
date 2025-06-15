@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Getter
@@ -26,4 +28,10 @@ public class User {
     private String password;
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Todo> todos;
+//    @ManyToMany
+//    private final List<Role> roles = new ArrayList<>();
+//
+//    public Collection<Role> getRoles() {
+//        return roles;}
+
 }

@@ -1,7 +1,9 @@
 package com.example.TodoApp.security;
 
+import com.example.TodoApp.security.jwt.AuthEntryPointJwt;
+import com.example.TodoApp.security.jwt.AuthTokenFilter;
 import com.example.TodoApp.service.CustomUserDetails;
-import com.example.TodoApp.service.UserServiceImpl;
+import com.example.TodoApp.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,23 +19,55 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
 
+    @Autowired
+    CustomUserDetailsService customUserDetailsService;
+    @Autowired
+    private AuthEntryPointJwt unauthorizedHandler;
+
+    @Bean
+    public AuthTokenFilter authenticationJwtTokenFilter() {
+        return new AuthTokenFilter();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration,
+            UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder
+
+    )throws Exception {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
+
+        return new ProviderManager(authenticationProvider);
+    }
+
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
+         http
                 .csrf(AbstractHttpConfigurer::disable) // Disable for API usage
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless (no HTTP sessions)
+                .cors(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling.authenticationEntryPoint(unauthorizedHandler)
+                )
+
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Allow register/login endpoints
-                        .anyRequest().authenticated()) // Everything else requires authentication
-                .build();
+                        .anyRequest().authenticated());
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+ return http.build();// Everything else requires authentication
     }
 
     @Bean
@@ -41,13 +75,5 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder(); // Use BCrypt for hashing passwords
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-            UserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder) {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder);
 
-        return new ProviderManager(authenticationProvider);
-    }
 }

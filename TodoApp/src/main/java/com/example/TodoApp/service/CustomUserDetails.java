@@ -1,24 +1,21 @@
 package com.example.TodoApp.service;
 
 import com.example.TodoApp.entity.User;
-import com.example.TodoApp.repositories.UserRepository;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 public class CustomUserDetails implements UserDetails {
     @Getter
     private final com.example.TodoApp.entity.User user;
-
-    public CustomUserDetails(com.example.TodoApp.entity.User user) {
-        this.user = user;
+@Autowired
+private User userEntity;
+    public CustomUserDetails(User userEntity) {
+        this.user = userEntity;
     }
 
 

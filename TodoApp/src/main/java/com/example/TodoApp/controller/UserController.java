@@ -4,6 +4,7 @@ import com.example.TodoApp.dto.LoginRequest;
 import com.example.TodoApp.dto.TodoDto;
 import com.example.TodoApp.dto.UserDto;
 import com.example.TodoApp.entity.User;
+import com.example.TodoApp.security.jwt.JwtUtil;
 import com.example.TodoApp.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,9 +32,15 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
 
     @PostMapping()
-    public ResponseEntity<UserDto> Register(@RequestBody @Valid UserDto userDto){
+    public ResponseEntity<?> Register(@RequestBody @Valid UserDto userDto){
+        if (userService.existByUserNameOrEmail(userDto.getUsername(),userDto.getEmail()))
+        {return ResponseEntity.badRequest().body("Username or email already exists");}
+
         UserDto user=userService.register(userDto);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
 
@@ -46,8 +54,10 @@ public class UserController {
                 Authentication auth = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
                 );
+                UserDetails userDetails = (UserDetails) auth.getPrincipal();
+
                 // If successful, you can generate JWT token here or return success
-                return ResponseEntity.ok("Login successful");
+                return ResponseEntity.ok().body(jwtUtil.generateToken(userDetails.getUsername()));
             } catch (AuthenticationException ex) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
             }

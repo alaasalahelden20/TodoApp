@@ -12,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -50,13 +49,10 @@ private BCryptPasswordEncoder passwordEncoder;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public Boolean existByUserNameOrEmail(String Username,String Email) {
+        return userRepository.existsByUsername(Username)|| userRepository.existsByEmail(Email);
 
-        return userRepository.findByUsername(username)
-                .map(CustomUserDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
+    }
 
 
-       }
 }
