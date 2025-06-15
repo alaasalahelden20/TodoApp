@@ -113,7 +113,4 @@ For questions or support, feel free to open an issue or reach out at [alaasalahe
 
 ```
 
----
 
-Let me know if you want to include a section on JWT, Swagger UI, or Docker support! I can also help you generate a [sample Swagger doc](f) or [Dockerfile](f).
-```
