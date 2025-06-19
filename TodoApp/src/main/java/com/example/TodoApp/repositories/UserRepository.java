@@ -1,6 +1,5 @@
 package com.example.TodoApp.repositories;
 
-import com.example.TodoApp.dto.UserDto;
 import com.example.TodoApp.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

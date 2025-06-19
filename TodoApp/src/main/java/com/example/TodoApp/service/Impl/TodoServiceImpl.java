@@ -1,26 +1,24 @@
-package com.example.TodoApp.service;
+package com.example.TodoApp.service.Impl;
 
 import com.example.TodoApp.dto.TodoDto;
-import com.example.TodoApp.dto.UserDto;
 import com.example.TodoApp.entity.Todo;
 import com.example.TodoApp.entity.User;
 import com.example.TodoApp.mapper.TodoMapper;
 import com.example.TodoApp.repositories.TodoRepository;
 import com.example.TodoApp.repositories.UserRepository;
+import com.example.TodoApp.service.TodoService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 
 @AllArgsConstructor
 @Service
 
-public class TodoServiceImpl implements TodoService{
+public class TodoServiceImpl implements TodoService {
     private TodoRepository todoRepository;
     @Autowired
     TodoMapper todoMapper;
@@ -67,8 +65,7 @@ public class TodoServiceImpl implements TodoService{
 
     @Override
     public void delTodoById(Long Id){
-        Todo todo=todoRepository.getReferenceById(Id);
-         todoRepository.deleteById(todo.getId());
+         todoRepository.deleteById(Id);
 
     }
 }

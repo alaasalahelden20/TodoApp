@@ -1,4 +1,4 @@
-package com.example.TodoApp.service;
+package com.example.TodoApp.service.Impl;
 
 import com.example.TodoApp.entity.Role;
 import com.example.TodoApp.repositories.UserRepository;
@@ -26,9 +26,5 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
     }
-    private Set<GrantedAuthority> getAuthorities(Set<Role> roles) {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority( role.getName()))
-                .collect(Collectors.toSet());
-    }
+
 }

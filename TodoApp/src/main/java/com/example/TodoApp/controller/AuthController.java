@@ -1,8 +1,8 @@
 package com.example.TodoApp.controller;
 
 import com.example.TodoApp.dto.LoginRequest;
-import com.example.TodoApp.dto.TodoDto;
-import com.example.TodoApp.dto.UserDto;
+import com.example.TodoApp.dto.RegistrationDto;
+import com.example.TodoApp.dto.ResponseDto;
 import com.example.TodoApp.security.jwt.JwtUtil;
 import com.example.TodoApp.service.UserService;
 import lombok.AllArgsConstructor;
@@ -16,8 +16,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.List;
+import jakarta.validation.Valid; // Not javax.validation
 
 @RestController
 @AllArgsConstructor
@@ -36,12 +35,10 @@ public class AuthController {
 
 
     @PostMapping()
-    public ResponseEntity<?> Register(@RequestBody @Valid UserDto userDto){
-        if (userService.existByUserNameOrEmail(userDto.getUsername(), userDto.getEmail())) {
-            System.out.println(userService.existByUserNameOrEmail(userDto.getUsername(), userDto.getEmail()));
-            return ResponseEntity.badRequest().body("Username or email already exists");
-        }
-        UserDto user=userService.register(userDto);
+    public ResponseEntity<?> Register(@Valid @RequestBody  RegistrationDto registrationDto){
+
+        ResponseDto user=userService.register(registrationDto);
+        System.out.println(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
 
 
@@ -62,11 +59,7 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
             }
         }
-//        @GetMapping()
-//    public ResponseEntity<List<UserDto>> getAllUsers(){
-//       List<UserDto> users= userService.getAllUsers();
-//       return new ResponseEntity<>(users,HttpStatus.ACCEPTED);
-//        }
+
 
 
 

@@ -2,7 +2,7 @@ package com.example.TodoApp.security;
 
 import com.example.TodoApp.security.jwt.AuthEntryPointJwt;
 import com.example.TodoApp.security.jwt.AuthTokenFilter;
-import com.example.TodoApp.service.CustomUserDetailsService;
+import com.example.TodoApp.service.Impl.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -47,7 +47,6 @@ public class SecurityConfig  {
         DaoAuthenticationProvider authenticationProvider =
                 new DaoAuthenticationProvider(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
-
         return new ProviderManager(authenticationProvider);
     }
 

@@ -1,7 +1,6 @@
 package com.example.TodoApp.security.jwt;
 
-import com.example.TodoApp.service.CustomUserDetailsService;
-import com.example.TodoApp.service.UserService;
+import com.example.TodoApp.service.Impl.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

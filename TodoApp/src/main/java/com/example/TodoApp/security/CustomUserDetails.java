@@ -52,6 +52,8 @@ private User userEntity;
         return user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
                 .collect(Collectors.toList());
+
+
     }
 
     @Override
